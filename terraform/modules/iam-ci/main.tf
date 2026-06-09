@@ -20,7 +20,13 @@ resource "aws_iam_policy" "ci_policy" {
                 Action = [
                     "s3:GetObject",
                     "s3:PutObject",
-                    "s3:ListBucket"
+                    "s3:ListBucket",
+                    "s3:GetBucketPolicy",
+                    "s3:GetBucketAcl",
+                    "s3:GetBucketLocation",
+                    "s3:GetEncryptionConfiguration",
+                    "s3:GetBucketVersioning",
+                    "s3:GetBucketPublicAccessBlock"
                 ]
                 Resource = [
                     var.state_bucket_arn,
@@ -38,11 +44,12 @@ resource "aws_iam_policy" "ci_policy" {
                 Resource = var.state_lock_table_arn
             },
             {
-                Sid    = "KMSStateDecrypt"
+                Sid    = "KMSAccess"
                 Effect = "Allow"
                 Action = [
                     "kms:Decrypt",
-                    "kms:GenerateDataKey"
+                    "kms:GenerateDataKey",
+                    "kms:DescribeKey"
                 ]
                 Resource = var.kms_key_arn
             },
