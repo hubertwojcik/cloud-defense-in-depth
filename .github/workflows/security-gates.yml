@@ -1,0 +1,44 @@
+name: "Security Gate"
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Echo
+        run: echo "Checkov!"   
+  tfsec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Echo
+        run: echo "tfsec!"   
+  opa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Echo
+        run: echo "opa!"   
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Echo
+        run: echo "trivy!"   
+  prowler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6
+      - name: Echo
+        run: echo "Prowler!"   T
