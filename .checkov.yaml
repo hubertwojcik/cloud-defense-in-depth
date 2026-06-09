@@ -1,0 +1,4 @@
+skip-check:
+  - CKV_AWS_18   # S3 access logging — demo environment, dedicated logging bucket would add unnecessary complexity
+  - CKV_AWS_290  # IAM write access without constraints — Flow Logs IAM policy requires Resource: "*" as CloudWatch Logs does not support resource-level permissions for these actions
+  - CKV_AWS_355  # IAM wildcard resource — same justification as CKV_AWS_290, required for VPC Flow Logs to CloudWatch

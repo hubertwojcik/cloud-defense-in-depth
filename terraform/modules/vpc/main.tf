@@ -24,8 +24,9 @@ resource "aws_subnet" "second_subnet" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
-    name = "${var.project}-${var.environment}-vpc-flow-logs"
-    retention_in_days = 90
+    name              = "${var.project}-${var.environment}-vpc-flow-logs"
+    retention_in_days = 365
+    kms_key_id        = var.kms_key_arn
 }
 
 resource "aws_flow_log" "main_vpc_flow_logs" {

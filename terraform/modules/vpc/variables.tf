@@ -21,3 +21,7 @@ variable "subnet_cidr" {
 variable "subnet_az" {
     type = list(string)
 }
+
+variable "kms_key_arn" {
+    type = string
+}
