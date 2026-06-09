@@ -7,3 +7,5 @@ skip-check:
   - CKV_AWS_144  # S3 cross-region replication — overkill for demo environment
   - CKV2_AWS_61  # S3 lifecycle configuration — overkill for demo environment
   - CKV2_AWS_62  # S3 event notifications — overkill for demo environment
+  - CKV_AWS_273  # IAM user instead of SSO — CI/CD service user required for GitHub Actions, SSO not applicable for programmatic access
+  - CKV_AWS_40   # Policy attached to user instead of group/role — CI user is a single-purpose service account, group would add unnecessary indirection
