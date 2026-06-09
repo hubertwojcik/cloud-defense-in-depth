@@ -2,3 +2,8 @@ skip-check:
   - CKV_AWS_18   # S3 access logging — demo environment, dedicated logging bucket would add unnecessary complexity
   - CKV_AWS_290  # IAM write access without constraints — Flow Logs IAM policy requires Resource: "*" as CloudWatch Logs does not support resource-level permissions for these actions
   - CKV_AWS_355  # IAM wildcard resource — same justification as CKV_AWS_290, required for VPC Flow Logs to CloudWatch
+  - CKV2_AWS_12  # Default VPC security group — not managing default SG in demo environment
+  - CKV2_AWS_5   # SG not attached to resource — no EC2 instances in demo environment by design
+  - CKV_AWS_144  # S3 cross-region replication — overkill for demo environment
+  - CKV2_AWS_61  # S3 lifecycle configuration — overkill for demo environment
+  - CKV2_AWS_62  # S3 event notifications — overkill for demo environment
