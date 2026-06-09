@@ -18,15 +18,9 @@ resource "aws_iam_policy" "ci_policy" {
                 Sid    = "TerraformStateS3"
                 Effect = "Allow"
                 Action = [
-                    "s3:GetObject",
-                    "s3:PutObject",
-                    "s3:ListBucket",
-                    "s3:GetBucketPolicy",
-                    "s3:GetBucketAcl",
-                    "s3:GetBucketLocation",
-                    "s3:GetEncryptionConfiguration",
-                    "s3:GetBucketVersioning",
-                    "s3:GetBucketPublicAccessBlock"
+                    "s3:Get*",
+                    "s3:List*",
+                    "s3:PutObject"
                 ]
                 Resource = [
                     var.state_bucket_arn,
@@ -39,7 +33,8 @@ resource "aws_iam_policy" "ci_policy" {
                 Action = [
                     "dynamodb:GetItem",
                     "dynamodb:PutItem",
-                    "dynamodb:DeleteItem"
+                    "dynamodb:DeleteItem",
+                    "dynamodb:DescribeTable"
                 ]
                 Resource = var.state_lock_table_arn
             },
@@ -49,7 +44,10 @@ resource "aws_iam_policy" "ci_policy" {
                 Action = [
                     "kms:Decrypt",
                     "kms:GenerateDataKey",
-                    "kms:DescribeKey"
+                    "kms:DescribeKey",
+                    "kms:GetKeyPolicy",
+                    "kms:GetKeyRotationStatus",
+                    "kms:List*"
                 ]
                 Resource = var.kms_key_arn
             },
