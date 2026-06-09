@@ -17,7 +17,7 @@ resource "aws_kms_key" "kms_key" {
         },
         Action   = "kms:*"
         Resource = "*"
-      },C
+      },
     ]
   })
      tags = {
