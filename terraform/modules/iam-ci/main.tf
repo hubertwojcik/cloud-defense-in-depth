@@ -34,7 +34,8 @@ resource "aws_iam_policy" "ci_policy" {
                     "dynamodb:GetItem",
                     "dynamodb:PutItem",
                     "dynamodb:DeleteItem",
-                    "dynamodb:DescribeTable"
+                    "dynamodb:Describe*",
+                    "dynamodb:List*"
                 ]
                 Resource = var.state_lock_table_arn
             },
