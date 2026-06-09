@@ -12,29 +12,62 @@ permissions:
 
 jobs:
   checkov:
+    name: Checkov (plan scan)
     runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: Analyze terraform code with Checkov
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Terraform Init
+        working-directory: terraform/
+        run: terraform init -input=false
+
+      - name: Terraform Plan
+        working-directory: terraform/
+        run: terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
+
+      - name: Run Checkov on plan
         uses: bridgecrewio/checkov-action@v12
         with:
-          directory: terraform/
-          output_format: cli,sarif
-          output_file_path: console,results.sarif
-          soft_fail: true
+          file: terraform/tfplan.json
+          framework: terraform_plan
+          soft_fail: false
+          output_format: sarif
+          output_file_path: checkov.sarif
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: results.sarif
+          sarif_file: checkov.sarif
+
   tfsec:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: Echo
-        run: echo "tfsec!"   
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-sarif-action@v0.1.4
+        with:
+          working_directory: terraform/
+          sarif_file: tfsec.sarif
+          tfsec_args: --minimum-severity HIGH
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: tfsec.sarif
   opa:
     runs-on: ubuntu-latest
     steps:
