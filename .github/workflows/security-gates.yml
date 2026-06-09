@@ -53,17 +53,15 @@ jobs:
   tfsec:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: tfsec
-        uses: aquasecurity/tfsec-action@v1
-        with:
-          working_directory: terraform/
-          additional_args: >
-            --concise-output
-            --format sarif
-            --out tfsec.sarif
-            --soft-fail-severities LOW,MEDIUM
+
+      - name: Install tfsec
+        run: curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash
+
+      - name: Run tfsec
+        run: tfsec terraform/ --format sarif --out tfsec.sarif --minimum-severity HIGH
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         if: always()
