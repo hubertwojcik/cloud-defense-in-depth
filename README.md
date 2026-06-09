@@ -1,5 +1,7 @@
 # cloud-defense-in-depth
 
+![Security Gate](https://github.com/hubertwojcik/cloud-defense-in-depth/actions/workflows/security-gates.yml/badge.svg)
+
 A Defense-in-Depth framework for detecting and remediating cloud misconfigurations across multiple security layers. The project demonstrates how layered controls reduce the blast radius of misconfigurations in AWS environments by combining IaC policy enforcement, CSPM tooling, CI/CD security gates, and runtime monitoring.
 
 ---
