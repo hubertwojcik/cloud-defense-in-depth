@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: always() && hashFiles('checkov.sarif') != ''
         with:
           sarif_file: checkov.sarif
 
@@ -113,9 +113,33 @@ jobs:
             exit 1
           fi
   trivy:
+    name: Trivy IaC Scan
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: Echo
-        run: echo "trivy!"   
+
+      - name: Run Trivy (config scan)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: 'terraform/'
+          format: 'sarif'
+          output: 'trivy.sarif'
+          exit-code: '1'
+          trivy-config: trivy.yaml
+      
+      - name: Upload Trivy SARIF as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-sarif
+          path: trivy.sarif
+      
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        if: always() && hashFiles('trivy.sarif') != ''
+        with:
+          sarif_file: trivy.sarif
+          category: trivy
+
