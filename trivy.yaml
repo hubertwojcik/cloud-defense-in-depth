@@ -1,0 +1,12 @@
+scan:
+  scanners:
+    - misconfig
+
+severity:
+  - HIGH
+  - CRITICAL
+
+misconfig:
+  include-non-failures: false
+
+version-check: false
