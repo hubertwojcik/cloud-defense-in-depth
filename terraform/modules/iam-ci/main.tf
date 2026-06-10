@@ -126,6 +126,27 @@ resource "aws_iam_policy" "ci_policy" {
                     "config:DescribeConfigurationRecorderStatus"
                 ]
                 Resource = "*"
+            },
+            {
+                Sid    = "SNSReadOnly"
+                Effect = "Allow"
+                Action = [
+                    "sns:GetTopicAttributes",
+                    "sns:ListTagsForResource",
+                    "sns:GetSubscriptionAttributes",
+                    "sns:ListSubscriptionsByTopic"
+                ]
+                Resource = "*"
+            },
+            {
+                Sid    = "EventBridgeReadOnly"
+                Effect = "Allow"
+                Action = [
+                    "events:DescribeRule",
+                    "events:ListTagsForResource",
+                    "events:ListTargetsByRule"
+                ]
+                Resource = "*"
             }
         ]
     })
