@@ -13,3 +13,7 @@ variable "vpc_id" {
 variable "allowed_cidr" {
     type = string
 }
+
+variable "vpc_cidr" {
+    type = string
+}
