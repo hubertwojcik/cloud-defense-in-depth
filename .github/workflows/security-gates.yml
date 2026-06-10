@@ -74,7 +74,7 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-sarif-action@v0.1.4
         with:
-          working_directory: terraform/
+          working_directory: .
           sarif_file: tfsec.sarif
           tfsec_args: --minimum-severity HIGH
 
@@ -136,7 +136,7 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
-          scan-ref: 'terraform/'
+          scan-ref: '.'
           format: 'sarif'
           output: 'trivy.sarif'
           exit-code: '1'
