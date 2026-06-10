@@ -1,0 +1,42 @@
+name: Scan AWS Infrastructure
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  prowler:
+    name: Prowler CSPM Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Prowler scan
+        uses: prowler-cloud/prowler-cloud-github-action@v1
+        with:
+          provider: aws
+          output-formats: sarif html
+          flags: --severity critical high --region eu-north-1
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: output/prowler.sarif
+
+      - name: Upload HTML report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prowler-report
+          path: output/prowler.html
+          retention-days: 30

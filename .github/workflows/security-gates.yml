@@ -119,10 +119,3 @@ jobs:
         uses: actions/checkout@v6
       - name: Echo
         run: echo "trivy!"   
-  prowler:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v6
-      - name: Echo
-        run: echo "Prowler!"
