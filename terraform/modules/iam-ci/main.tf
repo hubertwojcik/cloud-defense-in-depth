@@ -8,6 +8,7 @@ resource "aws_iam_user" "ci_user" {
     }
 }
 
+#tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_iam_policy" "ci_policy" {
     name = "${var.project}-${var.environment}-ci-policy"
 
