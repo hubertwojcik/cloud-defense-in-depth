@@ -1,0 +1,5 @@
+# AVD-AWS-0057: Resource:"*" on EC2, IAM read, and CloudWatch statements
+# Justification: AWS does not support resource-level permissions for EC2 Describe,
+# IAM List/Get, and CloudWatch Describe actions — Resource:"*" is mandatory per AWS docs.
+# Action wildcards have been replaced with explicit actions (s3:GetObject, etc.).
+AVD-AWS-0057

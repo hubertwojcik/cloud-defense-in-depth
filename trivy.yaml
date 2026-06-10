@@ -9,4 +9,6 @@ severity:
 misconfig:
   include-non-failures: false
 
+ignorefile: .trivyignore
+
 version-check: false
