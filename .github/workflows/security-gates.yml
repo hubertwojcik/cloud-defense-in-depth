@@ -69,12 +69,49 @@ jobs:
         with:
           sarif_file: tfsec.sarif
   opa:
+    name: OPA Policy Check
     runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v6
-      - name: Echo
-        run: echo "opa!"   
+
+      - name: Setup OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Run OPA unit tests
+        run: opa test opa/ -v
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Terraform Init
+        working-directory: terraform/
+        run: terraform init -input=false
+
+      - name: Terraform Plan
+        working-directory: terraform/
+        run: terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
+
+      - name: Evaluate OPA policies against plan
+        run: |
+          opa eval \
+            --data opa/policies/ \
+            --input terraform/tfplan.json \
+            --format pretty \
+            "data.policies.s3.violation | data.policies.security_group.violation | data.policies.iam.violation" \
+            | tee opa-results.txt
+          if grep -q '"msg"' opa-results.txt; then
+            echo "OPA policy violations found!"
+            exit 1
+          fi
   trivy:
     runs-on: ubuntu-latest
     steps:

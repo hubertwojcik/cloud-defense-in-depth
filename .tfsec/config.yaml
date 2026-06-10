@@ -1,0 +1,3 @@
+exclude:
+  - AVD-AWS-0057  # VPC Flow Logs IAM policy requires Resource: "*" — CloudWatch Logs does not support resource-level permissions for these actions
+  - AVD-AWS-0102  # VPC Flow Logs IAM policy — same justification
