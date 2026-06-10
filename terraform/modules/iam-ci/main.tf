@@ -106,6 +106,26 @@ resource "aws_iam_policy" "ci_policy" {
                     "logs:ListTagsForResource"
                 ]
                 Resource = "*"
+            },
+            {
+                Sid    = "SecurityHubProwler"
+                Effect = "Allow"
+                Action = [
+                    "securityhub:BatchImportFindings",
+                    "securityhub:GetFindings",
+                    "securityhub:DescribeHub"
+                ]
+                Resource = "*"
+            },
+            {
+                Sid    = "AWSConfigReadOnly"
+                Effect = "Allow"
+                Action = [
+                    "config:DescribeConfigurationRecorders",
+                    "config:DescribeDeliveryChannels",
+                    "config:DescribeConfigurationRecorderStatus"
+                ]
+                Resource = "*"
             }
         ]
     })

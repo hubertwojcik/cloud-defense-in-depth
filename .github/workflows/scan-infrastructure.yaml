@@ -25,7 +25,7 @@ jobs:
         with:
           provider: aws
           output-formats: sarif html
-          flags: --severity critical high --region eu-north-1
+          flags: --severity critical high --region eu-north-1 --security-hub
 
       - name: Upload SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
