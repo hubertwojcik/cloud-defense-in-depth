@@ -18,9 +18,19 @@ resource "aws_iam_policy" "ci_policy" {
                 Sid    = "TerraformStateS3"
                 Effect = "Allow"
                 Action = [
-                    "s3:Get*",
-                    "s3:List*",
-                    "s3:PutObject"
+                    "s3:GetObject",
+                    "s3:PutObject",
+                    "s3:ListBucket",
+                    "s3:GetBucketVersioning",
+                    "s3:GetEncryptionConfiguration",
+                    "s3:GetBucketLocation",
+                    "s3:GetBucketPolicy",
+                    "s3:GetBucketCors",
+                    "s3:GetBucketPublicAccessBlock",
+                    "s3:GetBucketTagging",
+                    "s3:GetBucketLogging",
+                    "s3:GetBucketObjectLockConfiguration",
+                    "s3:GetBucketAcl"
                 ]
                 Resource = [
                     var.state_bucket_arn,
@@ -34,8 +44,10 @@ resource "aws_iam_policy" "ci_policy" {
                     "dynamodb:GetItem",
                     "dynamodb:PutItem",
                     "dynamodb:DeleteItem",
-                    "dynamodb:Describe*",
-                    "dynamodb:List*"
+                    "dynamodb:DescribeTable",
+                    "dynamodb:DescribeContinuousBackups",
+                    "dynamodb:DescribeTimeToLive",
+                    "dynamodb:ListTagsOfResource"
                 ]
                 Resource = var.state_lock_table_arn
             },
@@ -48,7 +60,7 @@ resource "aws_iam_policy" "ci_policy" {
                     "kms:DescribeKey",
                     "kms:GetKeyPolicy",
                     "kms:GetKeyRotationStatus",
-                    "kms:List*"
+                    "kms:ListResourceTags"
                 ]
                 Resource = var.kms_key_arn
             },
@@ -56,18 +68,15 @@ resource "aws_iam_policy" "ci_policy" {
                 Sid    = "EC2ReadOnly"
                 Effect = "Allow"
                 Action = [
-                    "ec2:Describe*"
-                ]
-                Resource = "*"
-            },
-            {
-                Sid    = "VPCReadOnly"
-                Effect = "Allow"
-                Action = [
                     "ec2:DescribeVpcs",
                     "ec2:DescribeSubnets",
                     "ec2:DescribeSecurityGroups",
-                    "ec2:DescribeFlowLogs"
+                    "ec2:DescribeSecurityGroupRules",
+                    "ec2:DescribeFlowLogs",
+                    "ec2:DescribeInternetGateways",
+                    "ec2:DescribeRouteTables",
+                    "ec2:DescribeNetworkAcls",
+                    "ec2:DescribeAvailabilityZones"
                 ]
                 Resource = "*"
             },
@@ -75,8 +84,15 @@ resource "aws_iam_policy" "ci_policy" {
                 Sid    = "IAMReadOnly"
                 Effect = "Allow"
                 Action = [
-                    "iam:Get*",
-                    "iam:List*"
+                    "iam:GetUser",
+                    "iam:GetPolicy",
+                    "iam:GetPolicyVersion",
+                    "iam:GetRole",
+                    "iam:GetRolePolicy",
+                    "iam:ListAttachedUserPolicies",
+                    "iam:ListAttachedRolePolicies",
+                    "iam:ListRolePolicies",
+                    "iam:ListPolicies"
                 ]
                 Resource = "*"
             },
@@ -85,7 +101,8 @@ resource "aws_iam_policy" "ci_policy" {
                 Effect = "Allow"
                 Action = [
                     "logs:DescribeLogGroups",
-                    "logs:DescribeLogStreams"
+                    "logs:DescribeLogStreams",
+                    "logs:ListTagsForResource"
                 ]
                 Resource = "*"
             }
