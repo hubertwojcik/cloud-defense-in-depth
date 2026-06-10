@@ -98,7 +98,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform/
-        run: terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > terraform/tfplan.json
+        run: terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
 
       - name: Evaluate OPA policies against plan
         run: |
