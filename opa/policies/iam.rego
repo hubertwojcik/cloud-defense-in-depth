@@ -1,6 +1,6 @@
 package policies.iam
 
-violation[msg] {
+violation contains msg if {
     resource := input.resource_changes[_]
 
     resource.type == "aws_iam_policy"
@@ -17,7 +17,7 @@ violation[msg] {
     )
 }
 
-violation[msg] {
+violation contains msg if {
     resource := input.resource_changes[_]
 
     resource.type == "aws_iam_policy"

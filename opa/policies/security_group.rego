@@ -1,6 +1,6 @@
 package policies.security_group
 
-violation[msg] {
+violation contains msg if {
     resource := input.resource_changes[_]
 
     resource.type == "aws_vpc_security_group_ingress_rule"

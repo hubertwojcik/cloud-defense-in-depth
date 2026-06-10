@@ -1,6 +1,6 @@
 package policies.s3
 
-violation[msg] {
+violation contains msg if {
     resource := input.resource_changes[_]
     resource.type == "aws_s3_bucket_public_access_block"
     resource.change.after.block_public_acls != true
