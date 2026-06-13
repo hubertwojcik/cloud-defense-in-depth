@@ -22,6 +22,10 @@ jobs:
       TF_IN_AUTOMATION: "true"
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # terraform.tfvars is gitignored, so it is not present in CI.
+      # alert_email has no default and is only needed so `terraform plan`
+      # can produce a plan to scan — the value is never applied to SNS.
+      TF_VAR_alert_email: ci@example.com
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -37,7 +41,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform/
-        run: terraform plan -lock=false -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
+        run: terraform plan -input=false -lock=false -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
 
       - name: Upload plan artifact
         uses: actions/upload-artifact@v4
