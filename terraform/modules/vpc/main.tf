@@ -34,7 +34,7 @@ resource "aws_flow_log" "main_vpc_flow_logs" {
     log_destination = aws_cloudwatch_log_group.cloudwatch_log_group.arn
     traffic_type = "ALL"
     vpc_id = aws_vpc.main_vpc.id
-    log_destination_type = "cloud_watch_logs"
+    log_destination_type = "cloud-watch-logs"
 }
 
 resource "aws_iam_role" "flow_log_role" {
@@ -54,6 +54,7 @@ resource "aws_iam_role" "flow_log_role" {
     })
 }
 
+# tfsec:ignore:aws-iam-no-policy-wildcards - logs:CreateLogGroup does not support resource-level permissions in AWS
 resource "aws_iam_policy" "flow_log_policy" {
     name = "${var.project}-${var.environment}-flow-log-policy"
     policy = jsonencode({
