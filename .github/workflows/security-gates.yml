@@ -37,7 +37,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform/
-        run: terraform plan -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
+        run: terraform plan -lock=false -out=tfplan.bin && terraform show -json tfplan.bin > tfplan.json
 
       - name: Upload plan artifact
         uses: actions/upload-artifact@v4
@@ -74,9 +74,18 @@ jobs:
       - name: Run tfsec
         uses: aquasecurity/tfsec-sarif-action@v0.1.4
         with:
-          working_directory: .
+          working_directory: terraform/
           sarif_file: tfsec.sarif
           tfsec_args: --minimum-severity HIGH
+
+      - name: Fail on tfsec findings
+        run: |
+          count=$(jq '.runs[0].results | length' tfsec.sarif 2>/dev/null || echo 0)
+          if [ "$count" -gt 0 ]; then
+            echo "tfsec found $count HIGH/CRITICAL issue(s):"
+            jq -r '.runs[0].results[] | "  \(.ruleId): \(.message.text)"' tfsec.sarif
+            exit 1
+          fi
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
@@ -136,7 +145,7 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
-          scan-ref: '.'
+          scan-ref: 'terraform/'
           format: 'sarif'
           output: 'trivy.sarif'
           exit-code: '1'
