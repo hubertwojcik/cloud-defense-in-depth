@@ -54,6 +54,7 @@ resource "aws_iam_role" "flow_log_role" {
     })
 }
 
+# tfsec:ignore:aws-iam-no-policy-wildcards - logs:CreateLogGroup does not support resource-level permissions in AWS
 resource "aws_iam_policy" "flow_log_policy" {
     name = "${var.project}-${var.environment}-flow-log-policy"
     policy = jsonencode({
