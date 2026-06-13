@@ -135,8 +135,13 @@ jobs:
             --format pretty \
             "data.policies.s3.violation | data.policies.security_group.violation | data.policies.iam.violation" \
             | tee opa-results.txt
-          if grep -q '"msg"' opa-results.txt; then
+          # `violation` rules return the message strings directly, so the
+          # pretty output is a non-empty JSON array on violations and "[]"
+          # (or empty) when clean — fail the gate whenever it is non-empty.
+          result=$(tr -d '[:space:]' < opa-results.txt)
+          if [ -n "$result" ] && [ "$result" != "[]" ]; then
             echo "OPA policy violations found!"
+            cat opa-results.txt
             exit 1
           fi
   trivy:
